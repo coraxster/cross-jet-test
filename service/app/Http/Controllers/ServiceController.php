@@ -47,7 +47,7 @@ class ServiceController extends Controller
     public function logOut(Request $request)
     {
 	    $host = $request->getHost();
-	    return redirect('http://'.$host.'/service', 302)->withCookie(new Cookie('jwt', false, 0, '/', 'test.in'));
+	    return redirect('http://'.$host.'/service', 302)->withCookie(new Cookie('jwt', false, 0, '/', $host));
     }
 
     //
