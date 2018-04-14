@@ -48,7 +48,7 @@ class LoginController extends Controller
 		    ->sign($signer, env('JWT_SECRET', 'testing'))
 		    ->getToken();
 
-	    return redirect('http://'.$this->host.'/service', 302)->withCookie(new Cookie('jwt', (string) $token, 0, '/', 'test.in'));
+	    return redirect('http://'.$this->host.'/service', 302)->withCookie(new Cookie('jwt', (string) $token, 0, '/', $this->host));
 
 //	    $decodedToken = (new Parser())->parse((string)$token);
 //	    return [
