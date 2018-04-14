@@ -1,0 +1,17 @@
+version: "2"
+
+networks:
+  outnet:
+    external:
+      name: outnet
+
+services:
+
+# nginx
+  web:
+    build:
+      context: docker/nginx
+    ports:
+      - 80:80
+    networks:
+      - outnet

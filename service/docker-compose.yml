@@ -1,0 +1,49 @@
+version: "2"
+
+
+networks:
+  outnet:
+    external:
+      name: outnet
+
+services:
+
+  code:
+    image: tianon/true
+    volumes:
+      - ./:/app
+
+#  PHP-FPM
+  php:
+    build:
+      context: docker/php
+      args:
+        - INSTALL_XDEBUG=true
+        - INSTALL_PHPUNIT=true
+    volumes_from:
+      - code
+    tty: true
+    env_file:
+      - docker/base.env
+
+
+# nginx
+  web:
+    container_name: service-web
+    build:
+      context: docker/nginx
+    volumes_from:
+      - code
+    ports:
+      - 8086:80
+    links:
+      - php
+    networks:
+      - default
+      - outnet
+    environment:
+     - NGINX_HOST=push.in
+     - NGINX_PORT=80
+     - FPM_HOST=php
+     - FPM_PORT=9000
+    #command: /bin/bash -c "envsubst '$$NGINX_HOST $$NGINX_PORT $$FPM_HOST $$FPM_PORT' < /etc/nginx/conf.d/sms_service.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
